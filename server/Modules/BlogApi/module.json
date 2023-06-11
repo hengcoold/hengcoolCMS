@@ -1,0 +1,13 @@
+{
+    "name": "BlogApi",
+    "alias": "blogapi",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BlogApi\\Providers\\BlogApiServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

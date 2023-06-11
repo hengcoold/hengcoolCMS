@@ -1,0 +1,144 @@
+<?php
+// +----------------------------------------------------------------------
+// | Name: hengcool管理系统 [ 为了快速搭建软件应用而生的，希望能够帮助到大家提高开发效率。 ]
+// +----------------------------------------------------------------------
+// | Copyright: (c) 2020~2021 https://www.lvacms.cn All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed: 这是一个自由软件，允许对程序代码进行修改，但希望您留下原有的注释。
+// +----------------------------------------------------------------------
+// | Author: hengcool <260894671@qq.com>
+// +----------------------------------------------------------------------
+// | Version: V1
+// +----------------------------------------------------------------------
+
+/**
+ * @Name   全局异常处理
+ * @Description
+ * @Auther hengcool
+ * @Date 2021/6/4 18:17
+ */
+
+namespace Modules\Common\Exceptions;
+use BadMethodCallException;
+use Error;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use ParseError;
+use Throwable;
+
+class Handler extends ExceptionHandler
+{
+    private $status = 0;
+    private $message = '';
+    /**
+     * A list of the exception types that are not reported.
+     *
+     * @var array
+     */
+    protected $dontReport = [
+        //
+    ];
+
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->reportable(function (Throwable $e) {
+            //
+        });
+    }
+
+    /**
+     * @Name 定义异常状态
+     * @Description
+     * @Author hengcool
+     * @Date 2021/6/6 23:11
+     * @param $e
+     */
+    private function setErrorException($e){
+
+        if($e instanceof BadMethodCallException){
+            $this->status = StatusData::BAD_METHOD_CALL_EXCEPTION;
+            $this->message = MessageData::Error;
+        }else if($e instanceof Error){
+            $this->status = StatusData::Error;
+            $this->message = MessageData::Error;
+        }else if($e instanceof ParseError){
+            $this->status = StatusData::PARES_ERROR;
+            $this->message = MessageData::PARES_ERROR;
+        }else if($e instanceof \ReflectionException){
+            $this->status = StatusData::REFLECTION_EXCEPTION;
+            $this->message = MessageData::REFLECTION_EXCEPTION;
+        }else if($e instanceof \RuntimeException){
+            $this->status = StatusData::RUNTIME_EXCEPTION;
+            $this->message = MessageData::RUNTIME_EXCEPTION;
+        }else if($e instanceof \ErrorException){
+            $this->status = StatusData::ERROR_EXCEPTION;
+            $this->message = MessageData::ERROR_EXCEPTION;
+        }else if($e instanceof \InvalidArgumentException){
+            $this->status = StatusData::INVALID_ARGUMENT_EXCEPTION;
+            $this->message = MessageData::INVALID_ARGUMENT_EXCEPTION;
+        }else if($e instanceof ModelNotFoundException){
+            $this->status = StatusData::MODEL_NOT_FOUND_EXCEPTION;
+            $this->message = MessageData::MODEL_NOT_FOUND_EXCEPTION;
+        }else if($e instanceof QueryException){
+            $this->status = StatusData::QUERY_EXCEPTION;
+            $this->message = MessageData::QUERY_EXCEPTION;
+        }
+    }
+    public function render($request, Throwable $e)
+    {
+        if($request->is("api/*")){
+            if ($e instanceof ApiException) {
+                $result = [
+                    "status" => $e->getCode(),
+                    "message" => $e->getMessage(),
+                ];
+                return response()->json($result,CodeData::INTERNAL_SERVER_ERROR);exit();
+            }else if($e instanceof ValidationException){
+                $result = [
+                    "status"=>StatusData::BAD_REQUEST,
+                    "message"=>array_values($e->errors())[0][0]
+                ];
+                return response()->json($result,CodeData::BAD_REQUEST); exit();
+            }
+			if(!env("APP_DEBUG")){
+				$this->setErrorException($e);
+				if($this->status){
+					$data = [
+						"file"=>$e->getFile(),
+						"line"=>$e->getLine(),
+						"trace"=>$e->getTrace()
+					];
+					if($this->status == StatusData::MODEL_NOT_FOUND_EXCEPTION){
+						$data['message'] = $e->getModel();
+					}else{
+						$data['message'] = $e->getMessage();
+					}
+					return response()->json([
+						"status" => $this->status,
+						"message" => env("APP_DEBUG")?$this->message:MessageData::COMMON_EXCEPTION,
+						"data"=>$data,
+					],CodeData::INTERNAL_SERVER_ERROR);exit();
+				}
+			}
+        }
+         return parent::render($request, $e); // TODO: Change the autogenerated stub
+    }
+}

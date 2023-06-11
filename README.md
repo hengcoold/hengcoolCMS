@@ -1,6 +1,4 @@
 # hengcoolCMS管理系统
-![微信公众号](https://img.kancloud.cn/2a/3e/2a3e03cb805b053e5fc69ae441cb4cc8_344x344.jpg)
-![微信小程序](https://img.kancloud.cn/dd/74/dd74f74859f19f3f36257b329adec2de_344x344.jpg)
 #### 介绍
 hengcoolCMS管理系统，是一款开源的CMS管理系统，为中小企业提供最佳的开发方案。是2021年全新推出的一款轻量级、高性能、前后端分离的企业级管理系统。完美支持二次开发，可学习可商用，为快速搭建企业级应用而生。
 #### 技术特点
@@ -52,26 +50,8 @@ hengcoolCMS管理系统，是一款开源的CMS管理系统，为中小企业提
 # 本地开发 启动项目
 2. npm run dev
 ```
-#### 项目学习视频
-
-1. 头条号：[https://www.ixigua.com/6978410923761336865](https://www.ixigua.com/6978410923761336865)
-1. 知乎：[https://www.zhihu.com/column/c_1353362271926726656](https://www.zhihu.com/column/c_1353362271926726656)
-1. B站：[https://www.bilibili.com/video/BV1xL411W7DE?p=1](https://www.bilibili.com/video/BV1xL411W7DE?p=1)
-
-#### 文档地址
-[https://www.kancloud.cn/songbo-3_1/mld_soft/2292630](https://www.kancloud.cn/songbo-3_1/mld_soft/2292630)
 
 #### 后台演示地址
-[https://mldadmin.lvacms.cn](https://mldadmin.lvacms.cn)
 账号：admin 密码：123456
-
-
-
-#### 页面展示
-
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0627/170929_7f859ba0_1625612.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0627/171018_5b517599_1625612.png "屏幕截图.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0627/171127_78ff11c3_1625612.png "屏幕截图.png")
-
 
 
